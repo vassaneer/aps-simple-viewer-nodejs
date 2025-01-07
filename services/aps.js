@@ -21,7 +21,7 @@ async function getInternalToken() {
 }
 
 service.getViewerToken = async () => {
-    return await authenticationClient.getTwoLeggedToken(APS_CLIENT_ID, APS_CLIENT_SECRET, [Scopes.ViewablesRead]);
+    return await authenticationClient.getTwoLeggedToken(APS_CLIENT_ID, APS_CLIENT_SECRET, [Scopes.ViewablesRead, Scopes.BucketRead, Scopes.DataRead]);
 };
 
 service.ensureBucketExists = async (bucketKey) => {
@@ -32,7 +32,7 @@ service.ensureBucketExists = async (bucketKey) => {
         if (err.axiosError.response.status === 404) {
             await ossClient.createBucket(Region.Us, { bucketKey: bucketKey, policyKey: PolicyKey.Persistent }, { accessToken});
         } else {
-            throw err;  
+            throw err;
         }
     }
 };

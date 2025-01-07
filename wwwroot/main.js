@@ -87,8 +87,20 @@ async function onModelSelected(viewer, urn) {
             default:
                 clearNotification();
                 loadModel(viewer, urn);
-                break; 
+                break;
         }
+        // write urn and 3D
+        const urnHtml = document.getElementById('urn');
+        urnHtml.innerHTML = "URN: "+status.urn+"<br>GUID: "+status.guid;
+
+        // when click get dbId and x,y,z coorinate
+        viewer.addEventListener(Autodesk.Viewing.SELECTION_CHANGED_EVENT, function (ev) {
+          const result = viewer.clientToWorld(ev.clientX, ev.clientY);
+          const dbId = viewer.getSelection();
+          if (result) {
+              alert("dbId=" + dbId + ",x="+result.point.x + ",y="+result.point.y + ",z="+result.point.z);
+          }
+        });
     } catch (err) {
         alert('Could not load model. See the console for more details.');
         console.error(err);

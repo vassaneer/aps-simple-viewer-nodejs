@@ -21,17 +21,21 @@ router.get('/api/models/:urn/status', async function (req, res, next) {
         const manifest = await getManifest(req.params.urn);
         if (manifest) {
             let messages = [];
+            let guid = "";
             if (manifest.derivatives) {
                 for (const derivative of manifest.derivatives) {
                     messages = messages.concat(derivative.messages || []);
                     if (derivative.children) {
                         for (const child of derivative.children) {
                             messages.concat(child.messages || []);
+                            if(child.role=="3d") {
+                              guid = child.guid;
+                            }
                         }
                     }
                 }
             }
-            res.json({ status: manifest.status, progress: manifest.progress, messages });
+            res.json({ status: manifest.status, progress: manifest.progress, messages , urn: req.params.urn, guid});
         } else {
             res.json({ status: 'n/a' });
         }
